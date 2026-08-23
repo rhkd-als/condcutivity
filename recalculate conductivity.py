@@ -6,6 +6,12 @@ import win32com.client as win32
 from openpyxl import load_workbook
 from openpyxl.styles import Font
 
+# win32com 캐시 문제 해결
+try:
+    win32.gencache.EnsureModule('{00020813-0000-0000-C000-000000000046}', 0, 1, 9)
+except Exception:
+    pass
+
 # --- [1. 개별 파일 수식 및 서식 설정] ---
 def print_progress(current, total, bar_length=30):
     """콘솔에 작업 진행률 표시바를 출력하는 함수"""
@@ -195,7 +201,7 @@ def main():
         apply_formulas_to_all_files(root_input, l_val)
         
         # 엑셀 어플리케이션 백그라운드 실행
-        excel = win32.gencache.EnsureDispatch('Excel.Application')
+        excel = win32.Dispatch('Excel.Application')
         excel.Visible, excel.DisplayAlerts = False, False
         try:
             # 2단계: 하위 폴더별 요약 작업 실행
